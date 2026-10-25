@@ -155,12 +155,13 @@ add_pubchem_ids <- function(drug_table) {
   
   drug_table$PUBCHEM_ID_updated <- drug_table$PUBCHEM_from_name
   
+  # complete missing values from first pubchem_idS 
   missing <- is.na(drug_table$PUBCHEM_ID_updated)
   
   drug_table$PUBCHEM_ID_updated[missing] <-
     as.character(drug_table$PUBCHEM_ID[missing])
   
-  
+  # complete missing values from PUBCHEM_from_nsc column 
   missing <- is.na(drug_table$PUBCHEM_ID_updated)
   
   drug_table$PUBCHEM_ID_updated[missing] <-
@@ -171,6 +172,6 @@ add_pubchem_ids <- function(drug_table) {
 }
 
 
-test_table <- drugSynonymTab_pubchem[1:5, ]
-test_result <- add_pubchem_ids(test_table)
+# test_table <- drugSynonymTab_pubchem[1:5, ]
+# test_result <- add_pubchem_ids(test_table)
 
