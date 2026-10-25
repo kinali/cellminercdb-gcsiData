@@ -92,19 +92,33 @@ add_pubchem_ids <- function(drug_table) {
   
   
   # ----------------------------------------------------------
-  # 3. Search PubChem using drug name
+  # 3. Search PubChem using drug names [1] and [2] from NAME_SET
   # ----------------------------------------------------------
+
   
   drug_table$PUBCHEM_from_name <- vapply(
-    drug_table$primary_name,
+    drug_table$NAME_SET,
     function(x) {
       
-      if (is.na(x) || x == "") {
-        return(NA_character_)
+      # Check the first two names
+      for (name in head(x, 2)) {
+        
+        if (is.na(name) || name == "") {
+          next
+        }
+        
+        result <- as.character(getPubchemFromName(name))
+        
+        # Return the first valid PubChem ID
+        if (length(result) == 1 &&
+            !is.na(result) &&
+            result != "") {
+          return(result)
+        }
       }
       
-      as.character(getPubchemFromName(x))
-      
+      # If neither name returns a valid PubChem ID
+      return(NA_character_)
     },
     character(1)
   )
@@ -127,6 +141,7 @@ add_pubchem_ids <- function(drug_table) {
     },
     character(1)
   )
+  
   
   
   # ----------------------------------------------------------
@@ -156,5 +171,6 @@ add_pubchem_ids <- function(drug_table) {
 }
 
 
-
+test_table <- drugSynonymTab_pubchem[1:5, ]
+test_result <- add_pubchem_ids(test_table)
 
